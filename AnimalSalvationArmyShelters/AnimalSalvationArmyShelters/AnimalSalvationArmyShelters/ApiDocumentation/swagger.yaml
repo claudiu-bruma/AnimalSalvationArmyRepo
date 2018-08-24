@@ -1,0 +1,234 @@
+swagger: "2.0"
+info:
+  description: "No description"
+  version: "1.0.0"
+  title: "PetShelterApi"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /animalShelter:
+    post:
+      summary: "/Create animal Shelter"
+      parameters:
+      - name: "ShelterName"
+        in: "query"
+        required: true
+        type: "string"
+        description: "Animal Shelter Name"
+        x-example: "'Dany' marvelous Shelter'"
+      responses:
+        200:
+          description: "Status 200"
+          schema:
+            type: "integer"
+            description: "returns Unique Id for Created Pet Shelter"
+    delete:
+      summary: "Delete Animal Shelter"
+      description: "Delete Animal Shelter"
+      parameters:
+      - name: "Unique Identifier For Pet Selter"
+        in: "query"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "Status 200"
+        404:
+          description: "Shelter to be deleted was not found"
+  /animalShelter/worker:
+    post:
+      summary: "Add worker to shelter"
+      description: "Add worker to shelter"
+      consumes: []
+      parameters:
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          type: "object"
+          required:
+          - "workerName"
+          properties:
+            workerName:
+              type: "string"
+              description: "Pet Shelter Worker's name"
+            ShelterId:
+              type: "number"
+              description: "Unique Id of Shelter to add worker to"
+      responses:
+        200:
+          description: "Status 200"
+          schema:
+            type: "object"
+            properties:
+              ShelterWorkerId:
+                type: "number"
+                description: "Unique Id of added Shelter Worker"
+    delete:
+      summary: "remoeve worker from system"
+      parameters:
+      - name: "ShelterWorkerID"
+        in: "query"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "Status 200"
+  /Pet:
+    get:
+      summary: "Get a record for a pet with available details"
+      description: "Get a record for a pet with available details"
+      parameters:
+      - name: "PetId"
+        in: "query"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "Status 200"
+          schema:
+            $ref: "#/definitions/Pet"
+        404:
+          description: "Pet not found"
+    post:
+      summary: "Add a new pet to a shelter"
+      parameters:
+      - name: "PetForAdoption"
+        in: "query"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Status 200"
+    delete:
+      summary: "Remove Pet From Shelter"
+      description: "remove an animal from the shelter list (orray! we succeeded!!!);"
+      parameters:
+      - name: "PetId"
+        in: "query"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "Status 200"
+  /Pets/List:
+    get:
+      summary: "Pets"
+      description: "Get a list of All Pets for adoption "
+      parameters:
+      - name: "ShelterId"
+        in: "query"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "Status 200"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Pet"
+  /PetAdoption:
+    get:
+      summary: "PetAdoption"
+      description: "query pet adoption status "
+      parameters:
+      - name: "PetId"
+        in: "query"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "Status 200"
+          schema:
+            type: "object"
+            properties:
+              AdoptionContact:
+                $ref: "#/definitions/AdoptionContact"
+    post:
+      summary: "Post Adoption request for pet"
+      description: "Post Adoption request for pet"
+      parameters:
+      - name: "PetId"
+        in: "query"
+        required: false
+        type: "number"
+        description: "Unique id for the pet you want to adopt"
+      - name: "ContactDetails"
+        in: "query"
+        required: false
+        type: "string"
+        description: "Contact details for pet lover who wants to apopt"
+      responses:
+        200:
+          description: "Status 200"
+        301:
+          description: "Pet already adopted or pending adoption"
+        404:
+          description: "No such pet found"
+    put:
+      summary: "Mark Pet as adoptable ( ready for adoption )"
+      parameters:
+      - name: "PetId"
+        in: "query"
+        required: false
+        type: "number"
+      responses:
+        200:
+          description: "Status 200"
+  /Pets/CustomerList:
+    get:
+      summary: "browse the list of adoptable animals, filtering by shelter name and\
+        \ by already pending adoption"
+      description: "browse the list of adoptable animals, filtering by shelter name\
+        \ and by already pending adoption"
+      parameters:
+      - name: "ShelterName"
+        in: "query"
+        required: false
+        type: "string"
+        description: "Name of shelter to filter by"
+      - name: "PetAlreadyPendingAdoption"
+        in: "query"
+        required: false
+        type: "boolean"
+        description: "Pet already pending adoption"
+      responses:
+        200:
+          description: "Status 200"
+definitions:
+  Pet:
+    type: "object"
+    required:
+    - "Name"
+    properties:
+      Name:
+        type: "string"
+        description: "Pet's name"
+      Race:
+        type: "string"
+        description: "Pet's Race"
+      MedicalCondition:
+        type: "string"
+        description: "Pet's medical condition"
+      Photo:
+        type: "string"
+        format: "binary"
+        description: "Photo of animal in shelter"
+      Id:
+        type: "number"
+        description: "Unique Id of shelter Pet"
+  AdoptionContact:
+    type: "object"
+    properties:
+      Name:
+        type: "string"
+      Address:
+        type: "string"
+      Email:
+        type: "string"
+      PhoneNo:
+        type: "string"
+      Id:
+        type: "string"
