@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using AnimalSalvationArmy.Services.AnimalShelterServices;
 
 namespace AnimalSalvationArmyShelters.Controllers
 {
@@ -11,6 +12,12 @@ namespace AnimalSalvationArmyShelters.Controllers
     [ApiController]
     public class AnimalShelterController : ControllerBase
     {
+        private IAnimalShelterServices _animalShelterService;
+
+        public AnimalShelterController(IAnimalShelterServices animalShelterService)
+        {
+            _animalShelterService = animalShelterService;
+        }
         /// <summary>
         /// /Create animal Shelter
         /// </summary>
@@ -19,17 +26,8 @@ namespace AnimalSalvationArmyShelters.Controllers
         [Route("/animalShelter")]       
         public ActionResult Post([FromQuery]string shelterName)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(int?));
-
-            string exampleJson = null;
-            exampleJson = "0";
-
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<int?>(exampleJson)
-            : default(int?);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
+            var uniqueIdOfNewShelter = 0;
+            return Ok(uniqueIdOfNewShelter);
         }
 
         /// <summary>
@@ -43,14 +41,13 @@ namespace AnimalSalvationArmyShelters.Controllers
         [Route("/animalShelter")]        
         public ActionResult Delete([FromQuery]int uniqueIdentifierForPetSelter)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200);
-
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404);
-
-
-            throw new NotImplementedException();
+              throw new NotImplementedException();
+        }
+        [HttpGet]
+        [Route("/animalShelter")]
+        public string Get()
+        {
+            return "animalShelter";
         }
     }
 }

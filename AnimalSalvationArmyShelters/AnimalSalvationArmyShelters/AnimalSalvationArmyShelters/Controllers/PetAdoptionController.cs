@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AnimalSalvationArmyShelters.Models;
+using AnimalSalvationArmy.Services.PetService;
 
 namespace AnimalSalvationArmyShelters.Controllers
 {
@@ -13,6 +14,11 @@ namespace AnimalSalvationArmyShelters.Controllers
 
     public class PetAdoptionController : ControllerBase
     {
+        private IPetService _petService;
+        public PetAdoptionController(IPetService petService)
+        {
+            _petService = petService;
+        }
         /// <summary>
         /// PetAdoption
         /// </summary>
@@ -41,8 +47,7 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <summary>
         /// Mark Pet as adoptable ( ready for adoption )
         /// </summary>
-
-        /// <param name="petId"></param>
+        /// <param name="petId">unique id of pet to be markedAsAdoptable</param>
         /// <response code="200">Status 200</response>
         [HttpPut]
         public void Put([FromBody] int id)

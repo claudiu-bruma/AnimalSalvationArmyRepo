@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AnimalSalvationArmy.Services\AnimalSalvationArmy.Services.csproj" />
+  </ItemGroup>
+
 </Project>

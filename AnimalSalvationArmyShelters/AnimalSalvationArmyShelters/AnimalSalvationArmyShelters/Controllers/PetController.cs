@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AnimalSalvationArmyShelters.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using AnimalSalvationArmy.Services.PetService;
 
 namespace AnimalSalvationArmyShelters.Controllers
 {
@@ -12,6 +13,11 @@ namespace AnimalSalvationArmyShelters.Controllers
     [ApiController]
     public class PetController : ControllerBase
     {
+        private IPetService _petService;
+        public PetController(IPetService petService)
+        {
+            _petService = petService;
+        }
         /// <summary>
         /// Get a record for a pet with available details
         /// </summary>
@@ -28,12 +34,12 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <summary>
         /// Add a new pet to a shelter
         /// </summary>
-
         /// <param name="petForAdoption"></param>
         /// <response code="200">Status 200</response>
         [HttpPost]
-        public void Post([FromBody] Pet value)
+        public ActionResult Post([FromBody] Pet value)
         {
+            return Ok(value);
         }
 
         /// <summary>
@@ -43,8 +49,9 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <param name="petId"></param>
         /// <response code="200">Status 200</response>
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult Delete(int id)
         {
+            return Ok(id);
         }
         /// <summary>
         /// Pets

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AnimalSalvationArmyShelters.Models;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc; 
+using AnimalSalvationArmy.Services.ShelterWorker;
 
 namespace AnimalSalvationArmyShelters.Controllers
 {
@@ -11,6 +12,12 @@ namespace AnimalSalvationArmyShelters.Controllers
     [ApiController]
     public class ShelterWorkerController : Controller
     {
+        private IShelterWorkerService _shelterWorkerService;
+        public ShelterWorkerController(IShelterWorkerService shelterWorkerService)
+        {
+            _shelterWorkerService = shelterWorkerService;
+        }
+        
         /// <summary>
         /// remove worker from system
         /// </summary>
@@ -34,12 +41,12 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <param name="body"></param>
         /// <response code="200">Status 200</response>
         [HttpPost]
-        [Route("/animalShelter/worker")]       
-        public virtual IActionResult AnimalShelterWorkerPost([FromBody]ShelterWorker body)
+        [Route("/animalShelter/worker")]
+        public virtual IActionResult Post([FromBody]ShelterWorker body)
         {
             
             int id = 0;
-            return StatusCode(200, id);
+            return Ok(id);
         }
     }
 }
