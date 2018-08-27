@@ -8,6 +8,6 @@ namespace AnimalSalvationArmy.Services.AnimalShelterServices
     {
         int CreateAnimalShelter(string shelterName);
         void DeleteAnimalShelter(int shelterUniqueID);
-        
+        int GetShelterByName(string shelterName);
     }
 }

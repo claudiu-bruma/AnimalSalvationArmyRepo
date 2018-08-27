@@ -14,6 +14,8 @@ using AnimalSalvationArmy.Services.AnimalShelterServices;
 using AnimalSalvationArmy.Services.PetService;
 using AnimalSalvationArmy.Services.ShelterWorkerService;
 using AnimalSalvationArmy.Services.ShelterWorker;
+using AnimalSalvationArmy.DataAccessLayer;
+using AnimalSalvationArmy.DataAccessLayer.DataHelpers;
 
 namespace AnimalSalvationArmyShelters
 {
@@ -35,9 +37,11 @@ namespace AnimalSalvationArmyShelters
 
         public void ConfigureAnimalShelterServices(IServiceCollection services)
         {
-            services.AddSingleton<IAnimalShelterServices, AnimalShelterServices>();
-            services.AddSingleton<IPetService, PetService>();
-            services.AddSingleton<IShelterWorkerService, ShelterWorkerService>();
+            services.AddScoped<IAnimalShelterServices, AnimalShelterServices>();
+            services.AddScoped<IPetService, PetService>();
+            services.AddScoped<IShelterWorkerService, ShelterWorkerService>();
+            services.AddSingleton<AnimalShelterApplicationDataStore, AnimalShelterApplicationDataStore>();
+            services.AddScoped<IUniqueIdentityGenerator, UniqueIdentityGenerator>();
         }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

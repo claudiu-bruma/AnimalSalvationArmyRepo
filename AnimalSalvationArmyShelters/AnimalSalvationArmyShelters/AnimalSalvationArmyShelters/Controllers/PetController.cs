@@ -6,6 +6,7 @@ using AnimalSalvationArmyShelters.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AnimalSalvationArmy.Services.PetService;
+using AnimalSalvationArmy.Services.AnimalShelterServices;
 
 namespace AnimalSalvationArmyShelters.Controllers
 {
@@ -14,9 +15,11 @@ namespace AnimalSalvationArmyShelters.Controllers
     public class PetController : ControllerBase
     {
         private IPetService _petService;
-        public PetController(IPetService petService)
+        private IAnimalShelterServices _animalShelter;
+        public PetController(IPetService petService, IAnimalShelterServices animalShelter)
         {
             _petService = petService;
+            _animalShelter = animalShelter;
         }
         /// <summary>
         /// Get a record for a pet with available details
@@ -26,9 +29,16 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <response code="200">Status 200</response>
         /// <response code="404">Pet not found</response>
         [HttpGet("{id}")]
-        public ActionResult<Pet> Get(int id)
+        public ActionResult Get(int id)
         {
-            return new Pet();
+            try
+            {
+                var pet = _petService.GetPetById(id);
+                return Ok(pet);
+            }catch(ArgumentException aex)
+            {
+                return NotFound(aex.Message);                
+            }
         }
 
         /// <summary>
@@ -51,7 +61,16 @@ namespace AnimalSalvationArmyShelters.Controllers
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
-            return Ok(id);
+            try
+            {
+                _petService.RemovePetFromShelter(id);
+                return Ok(id);
+            }
+            catch(ArgumentException aex)
+            {
+                return NotFound(aex.Message);
+            }
+
         }
         /// <summary>
         /// Pets
@@ -63,7 +82,7 @@ namespace AnimalSalvationArmyShelters.Controllers
         [Route("Pet/List")]
         public ICollection<Pet> List()
         {
-            return new List<Pet>();
+           return GetPetList(new Nullable<int>(), new Nullable<bool>());
         }
         /// <summary>
         /// browse the list of adoptable animals, filtering by shelter name and by already pending adoption
@@ -76,7 +95,25 @@ namespace AnimalSalvationArmyShelters.Controllers
         [Route("Pet/CustomerList")]
         public ICollection<Pet> CustomerList(string shelterName , bool petAlreadyPendingAdoption = false )
         {
-            return new List<Pet>();
+            var shelterId = _animalShelter.GetShelterByName(shelterName);
+            return GetPetList(shelterId,petAlreadyPendingAdoption );
+        }
+        private ICollection<Pet> GetPetList(int? shelterId, bool? petAlreadyPendingAdoption)
+        {
+            var pets = _petService.GetListOfPets(shelterId, petAlreadyPendingAdoption);
+            if (!pets.Any())
+            {
+                return new List<Pet>();
+            }
+            return pets.Select(x => new Pet()
+            {
+                MedicalCondition = x.MedicalCondition,
+                Name = x.Name,
+                Photo = x.Photo,
+                Race = x.Race,
+                ShelterId = x.ShelterId,
+                Id = x.Id
+            }).ToList();
         }
     }
 }

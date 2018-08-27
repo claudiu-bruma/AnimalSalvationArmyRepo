@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AnimalSalvationArmyShelters.Models;
 using AnimalSalvationArmy.Services.PetService;
+using AnimalSalvationArmy.Web.Models;
 
 namespace AnimalSalvationArmyShelters.Controllers
 {
@@ -26,9 +27,27 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <param name="petId"></param>
         /// <response code="200">Status 200</response>
         [HttpGet("{id}")]
-        public ActionResult<AdoptionContact> Get(int id)
+        public ActionResult  Get(int id)
         {
-            return new AdoptionContact();
+            var pet = _petService.GetPetById(id);
+            if(pet == null )
+            {
+                return NotFound("Pet not found");
+            }
+            return Ok(
+                new AdoptionStatus()
+                {
+                    PetAdoptionPending = pet.AdoptionContact != null,
+                    AdoptionContact = pet.AdoptionContact != null ? 
+                                new AdoptionContact() {
+                                    Address = pet.AdoptionContact.Address,
+                                    Email = pet.AdoptionContact.Email,
+                                    Name = pet.AdoptionContact.Name,
+                                    PhoneNo = pet.AdoptionContact.PhoneNo 
+                                } :null
+                }
+            );
+             
         }
 
         /// <summary>

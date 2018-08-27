@@ -23,11 +23,25 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// </summary>
         /// <param name="shelterName">Animal Shelter Name</param>
         /// <response code="200">Status 200</response>
-        [Route("/animalShelter")]       
+        /// <response code="400">Status 400</response>
+        ///  <response code="409">Status 409 Shelter already exists</response>
+        [Route("/animalShelter")]
         public ActionResult Post([FromQuery]string shelterName)
         {
-            var uniqueIdOfNewShelter = 0;
-            return Ok(uniqueIdOfNewShelter);
+            if(string.IsNullOrEmpty (shelterName ))
+            {
+                return BadRequest("Shelter name cannot be empty");
+            }
+            try
+            {
+                var uniqueIdOfNewShelter = _animalShelterService.CreateAnimalShelter(shelterName);
+                return Ok(uniqueIdOfNewShelter);
+            }
+            catch(ArgumentException aex)
+            {
+                return Conflict(aex.Message);
+            }
+            
         }
 
         /// <summary>
@@ -38,16 +52,19 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <response code="200">Status 200</response>
         /// <response code="404">Shelter to be deleted was not found</response>
         [HttpDelete]
-        [Route("/animalShelter")]        
+        [Route("/animalShelter")]   
         public ActionResult Delete([FromQuery]int uniqueIdentifierForPetSelter)
         {
-              throw new NotImplementedException();
-        }
-        [HttpGet]
-        [Route("/animalShelter")]
-        public string Get()
-        {
-            return "animalShelter";
+            try
+            {
+                _animalShelterService.DeleteAnimalShelter(uniqueIdentifierForPetSelter);
+                return Ok();
+            }catch(ArgumentException aex)
+            {
+                return NotFound(aex.Message);
+            }
+
+
         }
     }
 }

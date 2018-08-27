@@ -24,6 +24,10 @@ paths:
           schema:
             type: "integer"
             description: "returns Unique Id for Created Pet Shelter"
+		400:
+           description: "Status 400 Shelter name cannot be empty"  
+		409:
+           description: "Status 409 Shelter already exists"
     delete:
       summary: "Delete Animal Shelter"
       description: "Delete Animal Shelter"
