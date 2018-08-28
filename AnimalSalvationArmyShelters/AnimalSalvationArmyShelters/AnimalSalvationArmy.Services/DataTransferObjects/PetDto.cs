@@ -12,6 +12,7 @@ namespace AnimalSalvationArmy.Services.DataTransferObjects
         public string MedicalCondition { get; set; }
         public int ShelterId { get; set; }
         public byte[] Photo { get; set; }
+        public string PhotoUrl { get; set; }
         public AdoptionContactDto AdoptionContact { get; set; }
 
     }

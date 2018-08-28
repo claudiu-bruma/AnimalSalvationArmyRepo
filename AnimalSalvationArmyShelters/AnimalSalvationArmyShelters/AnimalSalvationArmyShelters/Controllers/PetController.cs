@@ -125,7 +125,7 @@ namespace AnimalSalvationArmyShelters.Controllers
             {
                 MedicalCondition = x.MedicalCondition,
                 Name = x.Name,
-                Photo = x.Photo,
+                PhotoUrl = x.PhotoUrl,
                 Race = x.Race,
                 ShelterId = x.ShelterId,
                 Id = x.Id
