@@ -25,7 +25,7 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <response code="200">Status 200</response>
         [HttpDelete]
         [Route("/animalShelter/worker")]
-        public IActionResult Delete([FromQuery]int shelterWorkerID)
+        public ActionResult Delete([FromQuery]int shelterWorkerID)
         {
             //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
             // return StatusCode(200);
@@ -42,11 +42,10 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <response code="200">Status 200</response>
         [HttpPost]
         [Route("/animalShelter/worker")]
-        public virtual IActionResult Post([FromBody]ShelterWorker body)
+        public ActionResult Post([FromBody]ShelterWorker body)
         {
-            
-            int id = 0;
-            return Ok(id);
+
+            throw new NotImplementedException();
         }
     }
 }

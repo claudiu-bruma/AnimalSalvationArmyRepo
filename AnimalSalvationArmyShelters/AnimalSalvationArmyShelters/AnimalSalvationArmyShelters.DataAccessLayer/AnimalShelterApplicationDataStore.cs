@@ -8,6 +8,11 @@ using System.Text;
 
 namespace AnimalSalvationArmy.DataAccessLayer
 {
+    /// <summary>
+    /// this is only so that the application is tehnically functional 
+    /// in the real world, this would be replaced by a Repository 
+    /// handling access to a sql database
+    /// </summary>
     public class AnimalShelterApplicationDataStore
     {
         public ICollection<AdoptionContactEntity> AdoptionContact { get; set; }

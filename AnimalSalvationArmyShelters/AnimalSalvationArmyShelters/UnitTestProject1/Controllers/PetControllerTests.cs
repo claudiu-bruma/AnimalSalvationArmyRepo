@@ -52,13 +52,7 @@ namespace AnimalSalvationArmy.UnitTests.Controllers
             // Arrange
             var unitUnderTest = CreatePetController();
             _dataStore.Pets = new List<PetEntity>();
-            _dataStore.Pets.Add(new PetEntity() {
-                Id =342,
-                MedicalCondition ="healthy",
-                Name="goofy",
-                Race = "german shepard",
-                ShelterId= 1
-            });
+            _dataStore.Pets.Add(GetGoofyPetEntity());
             int id = 342;
 
             // Act
@@ -74,23 +68,9 @@ namespace AnimalSalvationArmy.UnitTests.Controllers
             // Arrange
             var unitUnderTest = CreatePetController();
             _dataStore.Pets = new List<PetEntity>();
-            var myPet = new PetEntity()
-            {
-                Id = 342,
-                MedicalCondition = "healthy",
-                Name = "goofy",
-                Race = "german shepard",
-                ShelterId = 1
-            };
+            var myPet = GetGoofyPetEntity();
             _dataStore.Pets.Add(myPet);
-            var anotherPet = new PetEntity()
-            {
-                Id = 344,
-                MedicalCondition = "healthy",
-                Name = "dexter",
-                Race = "french bulldog",
-                ShelterId = 1
-            };
+            var anotherPet = GetDexterPetEntity();
             int id = 342;
 
             // Act
@@ -110,23 +90,9 @@ namespace AnimalSalvationArmy.UnitTests.Controllers
             // Arrange
             var unitUnderTest = CreatePetController();
             _dataStore.Pets = new List<PetEntity>();
-            var myPet = new PetEntity()
-            {
-                Id = 342,
-                MedicalCondition = "healthy",
-                Name = "goofy",
-                Race = "german shepard",
-                ShelterId = 1
-            };
+            var myPet = GetGoofyPetEntity();
             _dataStore.Pets.Add(myPet);
-            var anotherPet = new PetEntity()
-            {
-                Id = 344,
-                MedicalCondition = "healthy",
-                Name = "dexter",
-                Race = "french bulldog",
-                ShelterId = 1
-            };
+            var anotherPet = GetDexterPetEntity();
             int id = 500;
 
             // Act
@@ -138,20 +104,14 @@ namespace AnimalSalvationArmy.UnitTests.Controllers
 
         }
 
+  
         [TestMethod]
         public void Post_AddPet_200ok()
         {
             // Arrange
             var unitUnderTest = CreatePetController();
             _dataStore.Pets = new List<PetEntity>();
-            var value = new Pet()
-            {
-                Id = 342,
-                MedicalCondition = "healthy",
-                Name = "goofy",
-                Race = "german shepard",
-                ShelterId = 1
-            };
+            var value = GetGoofyPet();
             // Act
             var result = unitUnderTest.Post(
                 value);
@@ -165,22 +125,51 @@ namespace AnimalSalvationArmy.UnitTests.Controllers
             // Arrange
             var unitUnderTest = CreatePetController();
             _dataStore.Pets = new List<PetEntity>();
-            var value = new Pet()
-            {
-                Id = 342,
-                MedicalCondition = "healthy",
-                Name = "goofy",
-                Race = "german shepard",
-                ShelterId = 1
-            };
+            var value = GetGoofyPet();
             // Act
             var result = unitUnderTest.Post(
                 value);
 
             // Assert
             Assert.IsInstanceOfType(result, typeof(Microsoft.AspNetCore.Mvc.OkObjectResult));
-            Assert.IsTrue(_dataStore.Pets.Any(x => x.Id == value.Id));
+            Assert.IsTrue(_dataStore.Pets.Any(x => x.Name == value.Name));
         }
+   
+
+        [TestMethod]
+        public void Post_AddPet_ShelterMissing()
+        {
+            // Arrange
+            var unitUnderTest = CreatePetController();
+            _dataStore.Pets = new List<PetEntity>();
+            var value = GetGoofyWithNoShelter();
+            // Act
+            var result = unitUnderTest.Post(
+                value);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(Microsoft.AspNetCore.Mvc.NotFoundObjectResult));
+            Assert.IsFalse(_dataStore.Pets.Any(x => x.Name == value.Name));
+        }
+
+
+        [TestMethod]
+        public void Post_AddPet_NameMissing()
+        {
+            // Arrange
+            var unitUnderTest = CreatePetController();
+            _dataStore.Pets = new List<PetEntity>();
+            var value = GetNamelessPet();
+            // Act
+            var result = unitUnderTest.Post(
+                value);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(Microsoft.AspNetCore.Mvc.NotFoundObjectResult));
+            Assert.IsFalse(_dataStore.Pets.Any(x => x.Race == value.Race));
+        }
+
+
 
         [TestMethod]
         public void Delete_RemovePet_removeSuccesfull()
@@ -188,14 +177,7 @@ namespace AnimalSalvationArmy.UnitTests.Controllers
             // Arrange
             var unitUnderTest = CreatePetController();
             _dataStore.Pets = new List<PetEntity>();
-            var petTodelete = new PetEntity()
-            {
-                Id = 342,
-                MedicalCondition = "healthy",
-                Name = "goofy",
-                Race = "german shepard",
-                ShelterId = 1
-            };
+            var petTodelete = GetGoofyPetEntity(); ;
             _dataStore.Pets.Add(petTodelete);
             // Act
             var result = unitUnderTest.Delete(
@@ -205,35 +187,111 @@ namespace AnimalSalvationArmy.UnitTests.Controllers
             Assert.IsInstanceOfType(result, typeof(Microsoft.AspNetCore.Mvc.OkObjectResult));
             Assert.IsFalse(_dataStore.Pets.Any(x => x.Id == petTodelete.Id));
         }
+        [TestMethod]
+        public void Delete_RemovePet_DeletePetNotInList()
+        {
+            // Arrange
+            var unitUnderTest = CreatePetController();
+            _dataStore.Pets = new List<PetEntity>();
+            var petTodelete = GetGoofyPetEntity(); ;
+            _dataStore.Pets.Add(petTodelete);
+            // Act
+            var result = unitUnderTest.Delete(
+                351);
 
-        //[TestMethod]
-        //public void List_StateUnderTest_ExpectedBehavior()
-        //{
-        //    // Arrange
-        //    var unitUnderTest = CreatePetController();
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(Microsoft.AspNetCore.Mvc.NotFoundObjectResult));
+          
+        }
 
-        //    // Act
-        //    var result = unitUnderTest.List();
+        [TestMethod]
+        public void List_ListContainsPets_Returns200ok()
+        {
+            // Arrange
+            var unitUnderTest = CreatePetController();
+            _dataStore.Pets = new List<PetEntity>();
+            _dataStore.Pets.Add(GetGoofyPetEntity());
+            // Act
+            var result = unitUnderTest.List();
 
-        //    // Assert
-        //    Assert.Fail();
-        //}
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(Microsoft.AspNetCore.Mvc.OkObjectResult));
+            
+           
+        }
+        [TestMethod]
+        public void List_ListContainsPet_ResultContainsPet()
+        {
+            // Arrange
+            var unitUnderTest = CreatePetController();
+            _dataStore.Pets = new List<PetEntity>();
+            var existingPet = GetGoofyPetEntity();
+            _dataStore.Pets.Add(existingPet);
+            // Act
+            var result = (Microsoft.AspNetCore.Mvc.OkObjectResult)unitUnderTest.List();
+            var returnedPetList = (List<Pet>)result.Value;
 
-        //[TestMethod]
-        //public void CustomerList_StateUnderTest_ExpectedBehavior()
-        //{
-        //    // Arrange
-        //    var unitUnderTest = CreatePetController();
-        //    string shelterName = TODO;
-        //    bool petAlreadyPendingAdoption = TODO;
+            // Assert 
+            Assert.IsNotNull(returnedPetList);
+            Assert.AreEqual(1, returnedPetList.Count());
+            Assert.IsTrue(returnedPetList.Any(x => x.Id == existingPet.Id
+                       && x.MedicalCondition == existingPet.MedicalCondition
+                       && x.Name == existingPet.Name
+                       && x.Race == existingPet.Race
+                        ));
 
-        //    // Act
-        //    var result = unitUnderTest.CustomerList(
-        //        shelterName,
-        //        petAlreadyPendingAdoption);
+        }
+        private static Pet GetNamelessPet()
+        {
+            return new Pet()
+            {
+                MedicalCondition = "healthy",
+                Race = "german shepard",
+                ShelterId = 1
+            };
+        }
+        private static PetEntity GetDexterPetEntity()
+        {
+            return new PetEntity()
+            {
+                Id = 344,
+                MedicalCondition = "healthy",
+                Name = "dexter",
+                Race = "french bulldog",
+                ShelterId = 1
+            };
+        }
 
-        //    // Assert
-        //    Assert.Fail();
-        //}
+        private static Pet GetGoofyPet()
+        {
+            return new Pet()
+            {
+
+                MedicalCondition = "healthy",
+                Name = "goofy",
+                Race = "german shepard",
+                ShelterId = 1
+            };
+        }
+        private static Pet GetGoofyWithNoShelter()
+        {
+            return new Pet()
+            {
+                MedicalCondition = "healthy",
+                Name = "goofy",
+                Race = "german shepard"
+            };
+        }
+        private static PetEntity GetGoofyPetEntity()
+        {
+            return new PetEntity()
+            {
+                Id = 1,
+                MedicalCondition = "healthy",
+                Name = "goofy",
+                Race = "german shepard",
+                ShelterId = 1
+            };
+        }
     }
 }

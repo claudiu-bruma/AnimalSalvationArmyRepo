@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AnimalSalvationArmy.Services.PetService;
 using AnimalSalvationArmy.Services.AnimalShelterServices;
+using AnimalSalvationArmy.Services.DataTransferObjects;
 
 namespace AnimalSalvationArmyShelters.Controllers
 {
@@ -37,7 +38,7 @@ namespace AnimalSalvationArmyShelters.Controllers
                 return Ok(pet);
             }catch(ArgumentException aex)
             {
-                return NotFound(aex.Message);                
+                return NotFound(aex.Message);      
             }
         }
 
@@ -49,6 +50,22 @@ namespace AnimalSalvationArmyShelters.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] Pet value)
         {
+            if (value.ShelterId <= 0)
+            {
+                return NotFound("Please Specify shelter");
+            }
+            if (string.IsNullOrWhiteSpace ( value.Name ))
+            {
+                return NotFound("This pet needs a name");
+            }            
+            _petService.AddPetToShelter(new PetDto()
+            {
+                MedicalCondition = value.MedicalCondition ,
+                Name = value.Name,
+                Photo = value.Photo,
+                Race = value.Race ,
+                ShelterId = value.ShelterId
+            });
             return Ok(value);
         }
 
@@ -80,9 +97,9 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <response code="200">Status 200</response>
         [HttpGet]
         [Route("Pet/List")]
-        public ICollection<Pet> List()
+        public ActionResult List()
         {
-           return GetPetList(new Nullable<int>(), new Nullable<bool>());
+           return Ok( GetPetList(new Nullable<int>(), new Nullable<bool>()));
         }
         /// <summary>
         /// browse the list of adoptable animals, filtering by shelter name and by already pending adoption
@@ -95,8 +112,7 @@ namespace AnimalSalvationArmyShelters.Controllers
         [Route("Pet/CustomerList")]
         public ICollection<Pet> CustomerList(string shelterName , bool petAlreadyPendingAdoption = false )
         {
-            var shelterId = _animalShelter.GetShelterByName(shelterName);
-            return GetPetList(shelterId,petAlreadyPendingAdoption );
+            throw new NotImplementedException();
         }
         private ICollection<Pet> GetPetList(int? shelterId, bool? petAlreadyPendingAdoption)
         {

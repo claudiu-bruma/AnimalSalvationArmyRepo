@@ -29,25 +29,8 @@ namespace AnimalSalvationArmyShelters.Controllers
         [HttpGet("{id}")]
         public ActionResult  Get(int id)
         {
-            var pet = _petService.GetPetById(id);
-            if(pet == null )
-            {
-                return NotFound("Pet not found");
-            }
-            return Ok(
-                new AdoptionStatus()
-                {
-                    PetAdoptionPending = pet.AdoptionContact != null,
-                    AdoptionContact = pet.AdoptionContact != null ? 
-                                new AdoptionContact() {
-                                    Address = pet.AdoptionContact.Address,
-                                    Email = pet.AdoptionContact.Email,
-                                    Name = pet.AdoptionContact.Name,
-                                    PhoneNo = pet.AdoptionContact.PhoneNo 
-                                } :null
-                }
-            );
-             
+            throw new NotImplementedException();
+
         }
 
         /// <summary>
@@ -60,8 +43,9 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <response code="301">Pet already adopted or pending adoption</response>
         /// <response code="404">No such pet found</response>
         [HttpPost]
-        public void Post([FromBody] AdoptionContact value)
+        public ActionResult Post([FromBody] AdoptionContact value)
         {
+            throw new NotImplementedException();
         }
         /// <summary>
         /// Mark Pet as adoptable ( ready for adoption )
@@ -69,8 +53,9 @@ namespace AnimalSalvationArmyShelters.Controllers
         /// <param name="petId">unique id of pet to be markedAsAdoptable</param>
         /// <response code="200">Status 200</response>
         [HttpPut]
-        public void Put([FromBody] int id)
+        public ActionResult Put([FromBody] int id)
         {
+            throw new NotImplementedException();
         }
 
     }
